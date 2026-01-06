@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>영성지능 테스트</title>
+    <title>심화 영성지능 테스트</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -11,10 +11,11 @@
             --spring-green: #e8f5e9;
             --point-color: #ff8a80;
             --text-color: #4e342e;
+            --header-color: #d81b60;
         }
 
         body {
-            font-family: 'Pretendard', sans-serif;
+            font-family: 'Pretendard', -apple-system, sans-serif;
             background: linear-gradient(135deg, var(--spring-pink), var(--spring-green));
             color: var(--text-color);
             margin: 0;
@@ -25,14 +26,15 @@
         }
 
         #app {
-            width: 90%;
-            max-width: 450px;
-            background: rgba(255, 255, 255, 0.92);
-            padding: 2.5rem 1.5rem;
+            width: 95%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.93);
+            padding: 2.5rem 1rem;
             border-radius: 30px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.05);
             text-align: center;
             position: relative;
+            box-sizing: border-box;
         }
 
         .page { display: none; animation: fadeIn 0.6s ease-out; }
@@ -40,8 +42,30 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 { font-size: 1.4rem; line-height: 1.6; color: #d81b60; margin-bottom: 2rem; }
-        h2 { font-size: 1.3rem; margin-bottom: 1rem; color: #2e7d32; }
+        h1 { font-size: 1.3rem; line-height: 1.6; color: var(--header-color); margin-bottom: 2rem; }
+        h2 { font-size: 1.2rem; margin-bottom: 1rem; color: #2e7d32; }
+
+        .intro-desc {
+            font-size: 0.8rem;
+            line-height: 1.8;
+            color: #6d4c41;
+            margin-top: 25px;
+            text-align: center;
+            padding: 0 10px;
+            word-break: keep-all;
+        }
+
+        .factor-header {
+            background: #fff;
+            border: 1px solid var(--point-color);
+            color: var(--header-color);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 
         .btn {
             background-color: var(--point-color);
@@ -58,49 +82,53 @@
         .btn-secondary { background-color: #90a4ae; }
         .btn:hover { transform: scale(1.05); opacity: 0.9; }
 
-        #progress { font-weight: bold; color: #ef5350; margin-bottom: 15px; }
-        .question-text { font-size: 1.15rem; margin-bottom: 2rem; line-height: 1.5; word-break: keep-all; min-height: 3.5rem; }
-        .options { display: flex; justify-content: space-between; margin-bottom: 2rem; }
-        .option-item { display: flex; flex-direction: column; align-items: center; font-size: 0.8rem; cursor: pointer; }
+        #progress { font-weight: bold; color: #ef5350; margin-bottom: 10px; font-size: 0.9rem; }
+        .question-text { font-size: 1.05rem; margin-bottom: 2rem; line-height: 1.6; word-break: keep-all; min-height: 5rem; display: flex; align-items: center; justify-content: center; padding: 0 10px; }
+        
+        .options { display: flex; justify-content: space-between; margin-bottom: 2rem; gap: 4px; }
+        .option-item { display: flex; flex-direction: column; align-items: center; font-size: 0.65rem; cursor: pointer; flex: 1; word-break: keep-all; line-height: 1.2; }
         .option-item input { display: none; }
         .dot {
-            width: 45px; height: 45px; border: 2px solid #ffcdd2;
+            width: 38px; height: 38px; border: 2px solid #ffcdd2;
             border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; margin-bottom: 8px; font-weight: bold; background: white;
+            justify-content: center; margin-bottom: 8px; font-weight: bold; background: white; transition: 0.2s; font-size: 0.9rem;
         }
         input:checked + .dot { background-color: var(--point-color); border-color: var(--point-color); color: white; }
 
-        .result-list { text-align: left; margin: 1rem auto; display: inline-block; }
-        .result-item { margin: 8px 0; font-size: 1.05rem; }
-        .total-score { font-size: 1.2rem; font-weight: bold; color: #d81b60; margin-top: 15px; border-top: 2px dashed #ffcdd2; padding-top: 10px; }
+        .guide-box { text-align: left; background: #fffde7; padding: 1.5rem; border-radius: 20px; border-left: 5px solid #fff176; margin-top: 1rem; line-height: 1.8; font-size: 0.95rem; }
+        .comment-text { font-style: italic; color: #ef5350; margin-bottom: 15px; font-weight: bold; display: block; border-bottom: 1px solid #ffe082; padding-bottom: 10px; }
 
-        .guide-box { text-align: left; background: #fffde7; padding: 1.5rem; border-radius: 20px; border-left: 5px solid #fff176; margin-top: 1rem; line-height: 1.6; }
-        .comment-text { font-style: italic; color: #ef5350; margin-bottom: 15px; font-weight: bold; }
-        .recommend-title { margin-top: 15px; color: #2e7d32; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-
-        .citation { position: absolute; bottom: 10px; right: 15px; font-size: 7px; color: #bbb; text-align: right; pointer-events: none; }
-        footer { font-size: 0.9rem; color: #888; margin-top: 2rem; }
+        .citation { position: absolute; bottom: 8px; right: 15px; font-size: 6.5px; color: #ccc; text-align: right; pointer-events: none; width: 85%; line-height: 1.2; }
+        footer { font-size: 0.85rem; color: #888; margin-top: 2rem; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
 <div id="app">
     <div id="page1" class="page active">
-        <h1>다중지능을 향상시키는<br>영성지능 테스트</h1>
+        <h1>하워드 가드너의 다중지능을 향상시키는<br>영성지능 테스트</h1>
         <button class="btn" onclick="nextPage(2)">버튼을 누르세요</button>
+        <div class="intro-desc">
+            하워드 가드너는<br> 
+            인간의 지능을 단일한 IQ가 아니라 언어, 논리·수학, 공간, 신체·운동, 음악, <br>
+            대인관계, 개인내적, 자연친화,영성지능의 9가지 지능으로 보았다.<br>
+            역사적으로 탁월한 사람은 9번째 지능인 영성지능이 높은 사람이었으며,<br>
+            본 테스트의 목적은 9번째 지능인 영성지능을 테스트하고 향상시키는데 있다.<br>            
+        </div>
         <footer>BANYOUNGHUN</footer>
     </div>
 
     <div id="page2" class="page">
         <div id="progress">1 / 20</div>
+        <div id="factor-display" class="factor-header">로딩 중...</div>
         <div id="question-container">
             <p class="question-text" id="q-text"></p>
             <div class="options">
-                <label class="option-item"><input type="radio" name="score" value="1"><span class="dot">1</span>전혀아님</label>
-                <label class="option-item"><input type="radio" name="score" value="2"><span class="dot">2</span></label>
-                <label class="option-item"><input type="radio" name="score" value="3"><span class="dot">3</span></label>
-                <label class="option-item"><input type="radio" name="score" value="4"><span class="dot">4</span></label>
-                <label class="option-item"><input type="radio" name="score" value="5"><span class="dot">5</span>매우그럼</label>
+                <label class="option-item"><input type="radio" name="score" value="1"><span class="dot">1</span>전혀<br>아니다</label>
+                <label class="option-item"><input type="radio" name="score" value="2"><span class="dot">2</span>드물다</label>
+                <label class="option-item"><input type="radio" name="score" value="3"><span class="dot">3</span>가끔</label>
+                <label class="option-item"><input type="radio" name="score" value="4"><span class="dot">4</span>자주</label>
+                <label class="option-item"><input type="radio" name="score" value="5"><span class="dot">5</span>거의<br>항상</label>
             </div>
         </div>
         <div style="display: flex; justify-content: center;">
@@ -112,17 +140,16 @@
 
     <div id="page3" class="page">
         <h2>영성지능 결과 리포트</h2>
-        <canvas id="radarChart" style="max-height: 230px;"></canvas>
-        <div id="text-results" class="result-list"></div>
-        <div id="total-score-display" class="total-score"></div>
+        <canvas id="radarChart" style="max-height: 220px;"></canvas>
+        <div id="text-results" style="text-align: left; margin: 10px auto; display: inline-block;"></div>
+        <div id="total-score-display" style="font-size: 1.2rem; font-weight: bold; color: var(--header-color); border-top: 2px dashed #ffcdd2; padding-top: 15px; margin-top: 10px;"></div>
         <button class="btn" style="width: 100%; margin-top: 15px;" onclick="copyResult()">결과 복사하기</button>
         <button class="btn btn-secondary" style="width: 100%;" onclick="nextPage(4)">성장 가이드 보기</button>
     </div>
 
     <div id="page4" class="page">
         <h2>영성지능 성장을 위한 약속</h2>
-        <div id="guide-content" class="guide-box">
-            </div>
+        <div id="guide-content" class="guide-box"></div>
         <div style="display: flex; justify-content: center; margin-top: 20px;">
             <button class="btn btn-secondary" onclick="nextPage(3)">이전으로</button>
             <button class="btn" onclick="location.reload()">다시 테스트하기</button>
@@ -132,26 +159,26 @@
 
 <script>
     const questions = [
-        { factor: 'CET', text: "세상은 어떻게 생겨났는지, 죽으면 어떻게 될지 자주 궁금해해요." },
-        { factor: 'CET', text: "사람은 왜 사는지, 나는 왜 태어났는지 나 스스로에게 물어봐요." },
-        { factor: 'CET', text: "성경 말씀(시편 127:1)처럼 내 마음의 주인은 누구인지 깊이 생각해요." },
-        { factor: 'CET', text: "힘든 일이 생겼을 때, 이 일이 나에게 어떤 가르침을 주는지 고민해요." },
-        { factor: 'CET', text: "눈에 보이는 것보다 더 소중한 생명의 비밀에 대해 알고 싶어해요." },
-        { factor: 'PME', text: "나는 평범한 하루 속에서도 소중한 기쁨과 의미를 잘 찾아내요." },
-        { factor: 'PME', text: "내가 하는 모든 일이 나중에 더 멋진 일이 될 거라고 믿어요." },
-        { factor: 'PME', text: "성경 말씀(로마서 8:28)처럼 모든 상황에서 좋은 의미를 찾으려 해요." },
-        { factor: 'PME', text: "실패하거나 속상해도 다시 일어나서 성장할 수 있는 힘이 있어요." },
-        { factor: 'PME', text: "내 삶에는 하나님이 주신 특별한 약속과 계획이 있다고 믿어요." },
-        { factor: 'TA', text: "우리가 사는 세상 너머에 신비롭고 영적인 세계가 있음을 느껴요." },
-        { factor: 'TA', text: "모든 사람과 자연이 서로 소중하게 연결되어 있다는 걸 느껴요." },
-        { factor: 'TA', text: "성경 말씀(시편 19:1)처럼 자연을 보며 하나님의 솜씨를 느껴요." },
-        { factor: 'TA', text: "나보다 더 크고 힘이 센 존재가 나를 지켜주고 도와준다고 느껴요." },
-        { factor: 'TA', text: "보이지 않는 힘이 내 마음과 행동에 좋은 영향을 준다고 믿어요." },
-        { factor: 'CSE', text: "기도나 조용한 명상을 할 때 마음이 아주 평온해지는 걸 경험해요." },
-        { factor: 'CSE', text: "영적인 일에 집중할 때 시간 가는 줄 모를 정도로 몰입하곤 해요." },
-        { factor: 'CSE', text: "성경 말씀(예레미야 33:3)처럼 기도 중에 놀라운 깨달음을 얻어요." },
-        { factor: 'CSE', text: "마음이 복잡할 때 스스로 마음을 정돈해서 평화를 찾을 수 있어요." },
-        { factor: 'CSE', text: "기도나 영성 활동을 하고 나면 마음이 맑아지고 새로운 생각이 떠올라요." }
+        { factor: 'CET', title: '1️⃣ CET – 비판적 실존적 사고', text: "나는 죽음·고난·질병에 대해 스스로 글이나 메모로 정리해 본 적이 있다." },
+        { factor: 'CET', title: '1️⃣ CET – 비판적 실존적 사고', text: "신앙과 관련된 질문 중 불편한 질문을 회피하지 않고 끝까지 고민한 경험이 있다." },
+        { factor: 'CET', title: '1️⃣ CET – 비판적 실존적 사고', text: "성경을 읽을 때, 의문을 제기해 본적이 있다." },
+        { factor: 'CET', title: '1️⃣ CET – 비판적 실존적 사고', text: "내 신앙이 실제 믿음인지, 습관인지 점검하려 노력한다." },
+        { factor: 'CET', title: '1️⃣ CET – 비판적 실존적 사고', text: "신앙적으로 정답처럼 여겨지는 말이라도 상대방이 상처가 된다면 하지 않는다." },
+        { factor: 'PME', title: '2️⃣ PME – 개인적 의미 생성', text: "나는 지난 1년간 삶을 기록(다이어리·노트·일기)한 것이 있다." },
+        { factor: 'PME', title: '2️⃣ PME – 개인적 의미 생성', text: "실패나 고난을 ‘하나님의 뜻’이라는 말로만 넘기지 않고 고난의 의미를 묵상한다." },
+        { factor: 'PME', title: '2️⃣ PME – 개인적 의미 생성', text: "내 신앙이 삶(친구관계, 직업, 술, 담배, 학교생활)에 영향을 미친다." },
+        { factor: 'PME', title: '2️⃣ PME – 개인적 의미 생성', text: "신앙적 가치 때문에 손해를 감수한 결정을 한 경험이 있다." },
+        { factor: 'PME', title: '2️⃣ PME – 개인적 의미 생성', text: "“하나님 뜻”이라는 표현을 쉽게 사용한다." },
+        { factor: 'TA', title: '3️⃣ TA – 초월적 인식', text: "일상 속 사건을 영적 의미로 해석한 경험이 있다." },
+        { factor: 'TA', title: '3️⃣ TA – 초월적 인식', text: "타인을 볼 때, 하나님의 형상으로 대하기 어려운 사람도 진심으로 존중하려 한다." },
+        { factor: 'TA', title: '3️⃣ TA – 초월적 인식', text: "자연·사건을 영적으로 해석한다." },
+        { factor: 'TA', title: '3️⃣ TA – 초월적 인식', text: "“하나님이 나와 함께하신다”는 믿음이 두려움 감소로 실제 이어진다." },
+        { factor: 'TA', title: '3️⃣ TA – 초월적 인식', text: "초월적 체험보다 삶의 태도 변화가 더 중요하다고 생각한다." },
+        { factor: 'CSE', title: '4️⃣ CSE – 의식 상태 확장', text: "나는 정해진 시간·장소에서 규칙적으로 기도 또는 묵상을 지속한다." },
+        { factor: 'CSE', title: '4️⃣ CSE – 의식 상태 확장', text: "기도 중 집중력을 유지하려 노력한다." },
+        { factor: 'CSE', title: '4️⃣ CSE – 의식 상태 확장', text: "기도·묵상 후 떠오른 생각을 행동으로 옮긴 경험이 있다." },
+        { factor: 'CSE', title: '4️⃣ CSE – 의식 상태 확장', text: "성령 충만 후에도 현실 판단력(지성)이 흐려지지 않도록 점검한다." },
+        { factor: 'CSE', title: '4️⃣ CSE – 의식 상태 확장', text: "성령 충만이 줄어드는 시기에도 신앙 훈련을 중단하지 않는다." }
     ];
 
     let currentIdx = 0;
@@ -161,6 +188,7 @@
     function nextPage(pageNum) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById('page' + pageNum).classList.add('active');
+        window.scrollTo(0,0);
         if(pageNum === 2) showQuestion();
         if(pageNum === 3) showResult();
         if(pageNum === 4) showGuide();
@@ -168,6 +196,7 @@
 
     function showQuestion() {
         document.getElementById('progress').innerText = `${currentIdx + 1} / 20`;
+        document.getElementById('factor-display').innerText = questions[currentIdx].title;
         document.getElementById('q-text').innerText = questions[currentIdx].text;
         const prevValue = userScores[currentIdx];
         document.querySelectorAll('input[name="score"]').forEach(rb => {
@@ -179,21 +208,13 @@
         const selected = document.querySelector('input[name="score"]:checked');
         if(!selected) { alert("번호를 선택해 주세요!"); return; }
         userScores[currentIdx] = parseInt(selected.value);
-        if(currentIdx < questions.length - 1) {
-            currentIdx++;
-            showQuestion();
-        } else {
-            nextPage(3);
-        }
+        if(currentIdx < questions.length - 1) { currentIdx++; showQuestion(); }
+        else { nextPage(3); }
     }
 
     function handlePrev() {
-        if(currentIdx > 0) {
-            currentIdx--;
-            showQuestion();
-        } else {
-            nextPage(1);
-        }
+        if(currentIdx > 0) { currentIdx--; showQuestion(); }
+        else { nextPage(1); }
     }
 
     function getLevel(score) {
@@ -210,10 +231,10 @@
         const totalScore = userScores.reduce((a,b) => a+b, 0);
 
         document.getElementById('text-results').innerHTML = `
-            <div class="result-item">• 비판적 실존적 사고: ${getLevel(avgScores.CET)}</div>
-            <div class="result-item">• 개인적 의미 생성: ${getLevel(avgScores.PME)}</div>
-            <div class="result-item">• 초월적 인식: ${getLevel(avgScores.TA)}</div>
-            <div class="result-item">• 의식 상태 확장: ${getLevel(avgScores.CSE)}</div>
+            <div>• 비판적 실존적 사고: ${getLevel(avgScores.CET)}</div>
+            <div>• 개인적 의미 생성: ${getLevel(avgScores.PME)}</div>
+            <div>• 초월적 인식: ${getLevel(avgScores.TA)}</div>
+            <div>• 의식 상태 확장: ${getLevel(avgScores.CSE)}</div>
         `;
         document.getElementById('total-score-display').innerText = `당신의 영성지능(SI): ${totalScore} 점`;
 
@@ -222,41 +243,43 @@
         chartInstance = new Chart(ctx, {
             type: 'radar',
             data: {
-                labels: ['생각', '의미', '인식', '평화'],
+                labels: ['비판사고', '의미생성', '초월인식', '의식확장'],
                 datasets: [{
-                    label: '나의 영성 점수',
+                    label: '영성 점수',
                     data: [avgScores.CET, avgScores.PME, avgScores.TA, avgScores.CSE],
                     backgroundColor: 'rgba(255, 138, 128, 0.4)',
                     borderColor: '#ff8a80',
                     pointBackgroundColor: '#d81b60'
                 }]
             },
-            options: { scales: { r: { min: 0, max: 5, ticks: { display: false } } } }
+            options: { scales: { r: { min: 0, max: 5, ticks: { display: false } } }, plugins: { legend: { display: false } } }
         });
     }
 
     function showGuide() {
         const factors = { CET:0, PME:0, TA:0, CSE:0 };
         userScores.forEach((s, i) => factors[questions[i].factor] += s);
-        
-        // 가장 낮은 요인 찾기 및 코멘트 생성
         const minFactor = Object.keys(factors).reduce((a, b) => factors[a] < factors[b] ? a : b);
         let comment = "";
         
         switch(minFactor) {
-            case 'CET': comment = "세상과 나에 대해 깊이 고민하는 힘을 기르면 더 멋진 사람이 될 수 있어요."; break;
-            case 'PME': comment = "작은 일에서도 소중한 의미와 기쁨을 찾는 연습이 조금 더 필요해요."; break;
-            case 'TA': comment = "눈에 보이지 않지만 우리를 지켜주는 큰 사랑을 느끼는 연습을 해봐요."; break;
-            case 'CSE': comment = "기도나 조용한 시간을 통해 마음을 차분히 가라앉히는 힘을 길러볼까요?"; break;
+            case 'CET': comment = "신앙의 핵심 질문들을 회피하지 않고 정직하게 대면하는 연습이 영적 성장에 큰 도움이 될 거예요."; break;
+            case 'PME': comment = "나의 일상과 신앙을 연결하여 기록해보는 습관이 삶의 의미를 더욱 풍성하게 만들어줄 것입니다."; break;
+            case 'TA': comment = "초월적인 체험에 집중하기보다 타인을 존중하고 일상을 영적으로 해석하는 균형이 필요해요."; break;
+            case 'CSE': comment = "감정의 변화에 상관없이 규칙적인 신앙 훈련을 유지할 때 더 깊은 영성의 성장을 이룰 수 있습니다."; break;
         }
 
         document.getElementById('guide-content').innerHTML = `
-            <p class="comment-text">"현재 ${comment}"</p>
-            <p class="recommend-title">📍 아래와 같은 훈련을 추천해요.</p>
+            <span class="comment-text">"현재 ${comment}"</span>
             <p><strong>💭 생각:</strong> 긍정적인 생각하기</p>
             <p><strong>🙏 믿음:</strong> 감사QT365 말씀 읽기</p>
             <p><strong>🌈 꿈:</strong> 큰 그림 그리기</p>
             <p><strong>💬 말:</strong> 매일 감사 3가지 이상 적고 기도하기</p>
+            <div style="margin-top:15px; border-top: 1px solid #ffe082; padding-top:10px;">
+                 <strong>📍 훈련:</strong> 크리스찬 미래저널 쓰기<br>
+    <span style="display:inline-block; margin-left: 4.2em;">지·정·의·체 교육</span><br>
+    <span style="display:inline-block; margin-left: 4.2em;">서번트 리더십</span>
+            </div>
         `;
     }
 
